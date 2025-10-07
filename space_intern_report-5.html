@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERNSHIP MISSION REPORT - DIGANTARA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000000;
+            color: #8a8a8a;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .corner-frame {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #333;
+            z-index: 10;
+        }
+        .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            margin-bottom: 60px;
+            border: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+
+        header::before, header::after {
+            content: '';
+            position: absolute;
+            background: #ff3333;
+            opacity: 0.8;
+        }
+        header::before {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.75em;
+            color: #4a4a4a;
+            letter-spacing: 1px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            margin-right: 8px;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: #cccccc;
+            margin-bottom: 15px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .mission-code {
+            font-size: 0.9em;
+            color: #ff3333;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .company-tagline {
+            font-size: 0.85em;
+            color: #444;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        .hero-stat {
+            text-align: center;
+            margin: 60px auto;
+            padding: 50px;
+            border: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.9);
+            max-width: 600px;
+            position: relative;
+        }
+
+        .hero-stat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #ff3333;
+        }
+
+        .hero-label-top {
+            font-size: 0.8em;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        .hero-number {
+            font-size: 6em;
+            color: #fff;
+            font-weight: 300;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
+        }
+
+        .hero-label {
+            font-size: 1.1em;
+            color: #999;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .section {
+            margin-bottom: 80px;
+            padding: 50px 0;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            font-size: 1.6em;
+            color: #ccc;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .section-code {
+            font-size: 0.8em;
+            color: #ff3333;
+            letter-spacing: 2px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .metric-card {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 35px 25px;
+            border: 1px solid #1a1a1a;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #333;
+            transition: background 0.3s ease;
+        }
+
+        .metric-card:hover {
+            background: rgba(10, 10, 10, 0.95);
+            border-color: #ff3333;
+        }
+
+        .metric-card:hover::before {
+            background: #ff3333;
+        }
+
+        .metric-category {
+            font-size: 0.75em;
+            color: #666;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 2.8em;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .metric-desc {
+            font-size: 0.9em;
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+            margin-top: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: #1a1a1a;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #1a1a1a;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -42px;
+            top: 30px;
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border: 1px solid #1a1a1a;
+        }
+
+        .timeline-item:hover {
+            background: rgba(10, 10, 10, 0.9);
+            border-color: #ff3333;
+            transform: translateX(5px);
+        }
+
+        .timeline-item:hover::before {
+            background: #ff3333;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
+        }
+
+        .timeline-date {
+            color: #666;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .timeline-title {
+            font-size: 1.1em;
+            color: #ccc;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .timeline-desc {
+            color: #888;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .timeline-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: transparent;
+            color: #666;
+            padding: 5px 10px;
+            border: 1px solid #1a1a1a;
+            font-size: 0.75em;
+            letter-spacing: 1px;
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #1a1a1a;
+            color: #666;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255, 51, 51, 0.1);
+            color: #ff3333;
+            border-color: #ff3333;
+        }
+
+        .journey-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 50px 40px;
+            border: 1px solid #1a1a1a;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .journey-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #ff3333, transparent);
+        }
+
+        .journey-content {
+            line-height: 2;
+            font-size: 0.95em;
+        }
+
+        .journey-content p {
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .journey-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .journey-list li {
+            margin-bottom: 20px;
+            color: #888;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .journey-list li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: #ff3333;
+            font-size: 1.4em;
+        }
+
+        .journey-list strong {
+            color: #ccc;
+        }
+
+        .closing {
+            text-align: center;
+            padding: 70px 40px;
+            border: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+
+        .closing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #ff3333;
+        }
+
+        .closing h2 {
+            font-size: 2.2em;
+            color: #ccc;
+            margin-bottom: 40px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .closing p {
+            font-size: 1em;
+            color: #888;
+            line-height: 2;
+            max-width: 900px;
+            margin: 0 auto 25px;
+        }
+
+        .closing-cta {
+            font-size: 1.2em;
+            color: #ff3333;
+            margin-top: 50px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: #1a1a1a;
+            border: 1px solid #1a1a1a;
+            margin: 40px 0;
+        }
+
+        .data-cell {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .data-cell:hover {
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .data-label {
+            font-size: 0.75em;
+            color: #666;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .data-value {
+            font-size: 1.8em;
+            color: #ccc;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .hero-number { font-size: 4em; }
+            .section { padding: 40px 0; }
+            .timeline { padding-left: 40px; }
+            .data-grid { grid-template-columns: 1fr; }
+            .container { padding: 40px 20px; }
+            header { padding: 60px 20px 30px; }
+            .hero-stat { padding: 40px; }
+            .filter-btns { justify-content: center; }
+            .journey-section { padding: 40px 20px; }
+            .closing { padding: 50px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8em; letter-spacing: 4px; }
+            .hero-number { font-size: 3em; }
+            .metric-value { font-size: 2.2em; }
+            .filter-btn { padding: 8px 15px; font-size: 0.8em; }
+            .closing h2 { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="spaceCanvas"></canvas>
+    
+    <div class="corner-frame corner-tl"></div>
+    <div class="corner-frame corner-tr"></div>
+    <div class="corner-frame corner-bl"></div>
+    <div class="corner-frame corner-br"></div>
+    
+    <div class="container">
+        <header>
+            <div class="status-bar">
+                <span class="status-indicator"></span>
+                SYSTEM ONLINE
+            </div>
+            <div class="mission-code">MISSION CODE: INTERN-2025-STARS</div>
+            <h1>INTERNSHIP REPORT</h1>
+            <div class="subtitle">4-MONTH PROGRESS REPORT AT DIGANTARA</div>
+            <div class="subtitle" style="font-size: 0.85em; margin-top: 8px;">OPERATIONAL PERIOD: 10.JUN.2025 - PRESENT</div>
+            <div class="company-tagline">SPACE-MAP | SPACE SITUATIONAL AWARENESS DIVISION</div>
+        </header>
+
+        <div class="hero-stat">
+            <div class="hero-label-top">PRIMARY CONTRIBUTIONS</div>
+            <div class="hero-number">24</div>
+            <div class="hero-label">STARS Platform Features</div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>MISSION IMPACT METRICS</h2>
+                <div class="section-code">STATUS: OPERATIONAL</div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-category">Major Features Developed</div>
+                    <div class="metric-value">2+</div>
+                    <div class="metric-desc">Core feature implementations delivered to production</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-category">Pull Requests Merged</div>
+                    <div class="metric-value">15+</div>
+                    <div class="metric-desc">Successfully integrated code contributions</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-category">Critical Bugs Resolved</div>
+                    <div class="metric-value">3+</div>
+                    <div class="metric-desc">Major user-facing issues fixed</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-category">UX Improvements</div>
+                    <div class="metric-value">10+</div>
+                    <div class="metric-desc">UI/UX consistency enhancements deployed</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-category">Modernization Initiatives</div>
+                    <div class="metric-value">2</div>
+                    <div class="metric-desc">Successful system modernization projects</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-category">Mission Success Rate</div>
+                    <div class="metric-value">100%</div>
+                    <div class="metric-desc">All assigned objectives completed</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>DEPLOYMENT LOG</h2>
+                <div class="section-code">24 OPERATIONS RECORDED</div>
+            </div>
+            <div class="filter-btns">
+                <button class="filter-btn" data-filter="all">ALL OPERATIONS</button>
+                <button class="filter-btn" data-filter="frontend">FRONTEND</button>
+                <button class="filter-btn active" data-filter="api">API</button>
+                <button class="filter-btn" data-filter="misc">MISC</button>
+            </div>
+            <div class="timeline" id="timeline"></div>
+        </div>
+
+        <div class="journey-section">
+            <div class="section-header">
+                <h2>OPERATIONAL JOURNEY</h2>
+                <div class="section-code">AGENT STATUS: ACTIVE</div>
+            </div>
+            <div class="journey-content">
+                <p>MISSION BRIEFING: Agent deployment initiated 10.JUN.2025 with zero Vue.js operational knowledge. Rapid skill acquisition protocol was engaged with full support from command structure.</p>
+                <ul class="journey-list">
+                    <li><strong>COMMAND SUPPORT:</strong> Experienced team lead and manager provided continuous guidance through Vue.js fundamentals and complex STARS platform architecture integration</li>
+                    <li><strong>COLLABORATIVE ENVIRONMENT:</strong> High-efficiency work environment at Digantara facilitated accelerated learning curves. Team members demonstrated exceptional knowledge-sharing protocols</li>
+                    <li><strong>RAPID DEPLOYMENT:</strong> Successfully transitioned from training phase to production code contribution within initial weeks of deployment</li>
+                    <li><strong>MISSION ALIGNMENT:</strong> Space situational awareness operations represent convergence of technical capabilities with high-impact real-world applications</li>
+                    <li><strong>ORGANIZATIONAL CULTURE:</strong> Innovation-driven, collaborative culture with continuous improvement methodology sustained engagement throughout deployment period</li>
+                </ul>
+                <p style="margin-top: 35px; color: #ccc; font-size: 1.05em;">ASSESSMENT: Mission objectives exceeded. Request full-time operational status for continued contribution to Digantara's strategic initiatives.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>TECHNICAL CAPABILITIES</h2>
+                <div class="section-code">SKILL MATRIX</div>
+            </div>
+            
+            <div class="data-grid">
+                <div class="data-cell">
+                    <div class="data-label">PRIMARY FRAMEWORK</div>
+                    <div class="data-value">Vue.js + TypeScript</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">SPECIALIZATION</div>
+                    <div class="data-value">Space Visualization</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">CORE COMPETENCY</div>
+                    <div class="data-value">UI/UX Engineering</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">INTEGRATION</div>
+                    <div class="data-value">API & Real-time Data</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">SYSTEMS</div>
+                    <div class="data-value">Space Engine 3D</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">DEPLOYMENT</div>
+                    <div class="data-value">Production-Ready</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="closing">
+            <h2>INTERNSHIP SUMMARY & FUTURE GOALS</h2>
+            <p>OPERATIONAL SUMMARY: Over the past four months, I have transitioned from having zero Vue.js knowledge to becoming a confident contributor to the STARS platform. This growth was made possible by the supportive and collaborative environment at Digantara.</p>
+            <p>MISSION SIGNIFICANCE: I am highly motivated by the opportunity to contribute to space safety and sustainability through my work on the Space-MAP operations. The challenging and meaningful nature of this work is something I am passionate about.</p>
+            <p>REQUEST STATUS: I am eager to continue learning and contributing to the team's success. I am committed to applying my skills and passion for space technology to help advance Digantara's space situational awareness vision and would be honored to be considered for a full-time position upon completion of my internship.</p>
+            <div class="closing-cta">EAGER TO CONTINUE CONTRIBUTING 🚀</div>
+        </div>
+    </div>
+
+    <script>
+        const projects = [
+            {
+                date: "SEP 17, 2025 - PRESENT",
+                title: "OC7 Target Details Screen Development",
+                desc: "Implementing comprehensive target details screen with left-side panel, right-side layout, observation windows with past/potential data tables, orbital table design, and modal expansion screens.",
+                type: "frontend",
+                tags: ["STARS FRONTEND", "UI DESIGN", "TABLES"]
+            },
+            {
+                date: "SEP 11-16, 2025",
+                title: "Maneuver API Endpoint Redesign",
+                desc: "Redeveloped Maneuver API endpoint with new jobStatus implementation to prevent infinite loading states and improve data handling reliability.",
+                type: "api",
+                tags: ["STARS API", "BACKEND INTEGRATION"]
+            },
+            {
+                date: "SEP 8-10, 2025",
+                title: "Space Engine Enhancements",
+                desc: "Added drawVolume function to center charts for both expanded and compact views in blind spots module. Fixed UI inconsistencies in NWS vueDatepicker component.",
+                type: "frontend",
+                tags: ["SPACE ENGINE", "3D VISUALIZATION"]
+            },
+            {
+                date: "SEP 3-5, 2025",
+                title: "UI Refinement & Code Review",
+                desc: "Implemented blind spot filter reusability in overview table, added clearable props to vue-datepicker, and performed comprehensive UI adjustments based on code reviews.",
+                type: "misc",
+                tags: ["MISC", "CODE QUALITY"]
+            },
+            {
+                date: "AUG 25-29, 2025",
+                title: "BS Dashboard Live Data Integration",
+                desc: "Replaced mock data with live API data in blind spot dashboard. Conducted thorough testing to ensure seamless data flow and functionality.",
+                type: "api",
+                tags: ["STARS API", "DATA INTEGRATION"]
+            },
+            {
+                date: "AUG 18-22, 2025",
+                title: "Overview Table Creation",
+                desc: "Developed comprehensive overview table for blind spot dashboard, initially with mock data for testing, then integrated with live API endpoints.",
+                type: "frontend",
+                tags: ["MISC", "TABLES", "DASHBOARD"]
+            },
+            {
+                date: "AUG 4-7, 2025",
+                title: "Navigation & Pagination Improvements",
+                desc: "Removed refresh icons from floating navigation, styled disabled pagination buttons with CSS, and implemented tooltip icons for displaying previous dates.",
+                type: "frontend",
+                tags: ["MISC", "UI/UX"]
+            },
+            {
+                date: "JUL 31, 2025",
+                title: "Search Icon Redesign & Asset List Bug Fix",
+                desc: "Redesigned search icons and deployed across all missing modules. Fixed critical bug where outside clicks prevented object type filter interactions in create asset list.",
+                type: "frontend",
+                tags: ["MISC", "BUG FIX"]
+            },
+            {
+                date: "JUL 30, 2025",
+                title: "Layout & Visualizer Conditional Rendering",
+                desc: "Fixed responsive layout issues on All-terminal page ensuring consistent display across screen sizes. Added conditional display logic for go-back button in visualizer's pattern of life.",
+                type: "frontend",
+                tags: ["MISC", "RESPONSIVE DESIGN"]
+            },
+            {
+                date: "JUL 29-30, 2025",
+                title: "DatePicker & List View Redesign",
+                desc: "Resolved date display issues in viewDatePicker by adjusting root class widths. Completely redesigned pass prediction list view according to new design specifications.",
+                type: "frontend",
+                tags: ["MISC", "UI COMPONENTS"]
+            },
+            {
+                date: "JUL 25, 2025",
+                title: "Chart Controls & Filter Enhancements",
+                desc: "Added reset buttons to all charts, implemented grey button styling for timesheet panel, optimized DCA/TCA filter behavior, and fixed z-index issues in polar plot charts.",
+                type: "frontend",
+                tags: ["MISC", "CHARTS", "FILTERS"]
+            },
+            {
+                date: "JUL 22-24, 2025",
+                title: "Object Type Filter & Color Standardization",
+                desc: "Implemented comprehensive object type filter showing all tracked objects in Gantt chart. Synchronized sensor swath colors with side panel sensor names for consistency.",
+                type: "frontend",
+                tags: ["MISC", "DATA VISUALIZATION"]
+            },
+            {
+                date: "JUL 17-18, 2025",
+                title: "NWS/VS Module Enhancements",
+                desc: "Added prediction period display, removed default TCA/DCA filters on page load, improved icon display logic, enhanced spacing and proximity in charts, and standardized clear selection buttons.",
+                type: "frontend",
+                tags: ["MISC", "UX IMPROVEMENTS"]
+            },
+            {
+                date: "JUL 17-18, 2025",
+                title: "Volumetrics Type Update & Error Resolution",
+                desc: "Updated Volumetrics type definitions and resolved all TypeScript errors. Fixed bookmark duplication error and improved data handling across components.",
+                type: "frontend",
+                tags: ["MISC", "TYPESCRIPT", "BUG FIX"]
+            },
+            {
+                date: "JUL 15, 2025",
+                title: "Component Standardization",
+                desc: "Standardized clear selection buttons across all filter interfaces. Updated positioning and design of go-back buttons and clean all buttons to match design specifications.",
+                type: "frontend",
+                tags: ["MISC", "UI CONSISTENCY"]
+            },
+            {
+                date: "JUL 14-15, 2025",
+                title: "Bookmark System Overhaul",
+                desc: "Migrated bookmark functionality from checkmark to star icon across all modules (list and single views). Implemented two-way data binding matching blind spot module behavior.",
+                type: "frontend",
+                tags: ["MISC", "FEATURE ENHANCEMENT"]
+            },
+            {
+                date: "JUL 10, 2025",
+                title: "Error Handling & UI Polish",
+                desc: "Implemented error display on new terminal form, changed bookmark icons to star system, greyed out disabled pagination buttons, and added prediction period to result panel.",
+                type: "frontend",
+                tags: ["STARS FRONTEND", "ERROR HANDLING"]
+            },
+            {
+                date: "JUL 9, 2025",
+                title: "Go-Back Button Standardization",
+                desc: "Updated all go-back buttons to match visualizer design pattern. Made terminal panel full-size and prevented accidental closures from outside clicks.",
+                type: "frontend",
+                tags: ["STARS FRONTEND", "UI CONSISTENCY"]
+            },
+            {
+                date: "JUL 8-9, 2025",
+                title: "Asset List Responsiveness",
+                desc: "Updated payload icons and colors in table and filter list views. Made selected assets box fully responsive. Changed object display text to dynamically show 'object' or 'objects' based on selection count.",
+                type: "frontend",
+                tags: ["MISC", "RESPONSIVE DESIGN"]
+            },
+            {
+                date: "JUL 4-7, 2025",
+                title: "Space Engine Package Update",
+                desc: "Updated all packages for space-engine and resolved build errors. Ensured compatibility and stability across dependencies.",
+                type: "frontend",
+                tags: ["STARS FRONTEND", "MAINTENANCE"]
+            },
+            {
+                date: "JUN 30 - JUL 4, 2025",
+                title: "STARS & SES Package Updates",
+                desc: "Comprehensive package updates for STARS and SES platforms. Verified builds and resolved compatibility issues across all modules.",
+                type: "misc",
+                tags: ["MISC", "PACKAGE MANAGEMENT"]
+            },
+            {
+                date: "JUN 25-27, 2025",
+                title: "Critical Bug Fixes",
+                desc: "Fixed markdown persistence on new entry creation, resolved pass prediction live time pause issues after reset, and ensured proper time resumption functionality.",
+                type: "frontend",
+                tags: ["STARS FRONTEND", "BUG FIX"]
+            },
+            {
+                date: "JUN 23-24, 2025",
+                title: "TypeScript Migration Assessment",
+                desc: "Converted Vue assessment project to TypeScript, ensuring type safety and improved code maintainability throughout the codebase.",
+                type: "misc",
+                tags: ["MISC", "TYPESCRIPT"]
+            },
+            {
+                date: "JUN 11-13, 2025",
+                title: "Vue Assessment - Satellite List",
+                desc: "Developed satellite list view with comprehensive filter functionality and search features as part of technical assessment.",
+                type: "misc",
+                tags: ["MISC", "ASSESSMENT"]
+            }
+        ];
+
+        const timelineContainer = document.getElementById('timeline');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderTimeline(filter = 'all') {
+            timelineContainer.innerHTML = '';
+            const filteredProjects = projects.filter(p => filter === 'all' || p.type === filter);
+
+            filteredProjects.forEach(project => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <div class="timeline-date">${project.date}</div>
+                    <div class="timeline-title">${project.title}</div>
+                    <div class="timeline-desc">${project.desc}</div>
+                    <div class="timeline-tags">
+                        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                timelineContainer.appendChild(item);
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderTimeline(btn.dataset.filter);
+            });
+        });
+
+        renderTimeline('api'); // Initial render
+        
+        // Canvas animation
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = Math.max(document.body.scrollHeight, window.innerHeight);
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Twinkling stars
+        const stars = [];
+        for (let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5 + 0.5,
+                opacity: Math.random(),
+                twinkleSpeed: Math.random() * 0.015 + 0.005,
+                drift: Math.random() * 0.2
+            });
+        }
+
+        // Satellites
+        const satellites = [
+            { x: canvas.width * 0.2, y: canvas.height * 0.25, angle: 0, radius: 180, speed: 0.002, trail: [], type: 'satellite' },
+            { x: canvas.width * 0.8, y: canvas.height * 0.35, angle: Math.PI, radius: 220, speed: 0.0018, trail: [], type: 'payload' },
+            { x: canvas.width * 0.5, y: canvas.height * 0.15, angle: Math.PI / 2, radius: 150, speed: 0.0025, trail: [], type: 'satellite' },
+            { x: canvas.width * 0.3, y: canvas.height * 0.55, angle: Math.PI * 1.5, radius: 200, speed: 0.0022, trail: [], type: 'debris' }
+        ];
+
+        // Space debris
+        const debris = [];
+        for (let i = 0; i < 12; i++) {
+            debris.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                size: Math.random() * 2 + 1,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.03
+            });
+        }
+
+        // Orbital paths
+        const orbitalPaths = [
+            { x: canvas.width * 0.2, y: canvas.height * 0.25, radius: 180 },
+            { x: canvas.width * 0.8, y: canvas.height * 0.35, radius: 220 },
+            { x: canvas.width * 0.5, y: canvas.height * 0.15, radius: 150 },
+            { x: canvas.width * 0.3, y: canvas.height * 0.55, radius: 200 }
+        ];
+
+        const pulses = [];
+        const scanLines = [];
+
+        function createScanLine() {
+            if (Math.random() < 0.01) {
+                scanLines.push({
+                    y: Math.random() * canvas.height,
+                    opacity: 0.3,
+                    speed: Math.random() * 2 + 1
+                });
+            }
+        }
+
+        function drawOrbitalPaths() {
+            ctx.strokeStyle = 'rgba(128, 128, 128, 0.8)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 8]);
+            
+            orbitalPaths.forEach(path => {
+                ctx.beginPath();
+                ctx.arc(path.x, path.y, path.radius, 0, Math.PI * 2);
+                ctx.stroke();
+            });
+            
+            ctx.setLineDash([]);
+        }
+
+        function drawStars() {
+            stars.forEach(star => {
+                star.opacity += star.twinkleSpeed;
+                if (star.opacity > 1 || star.opacity < 0.1) {
+                    star.twinkleSpeed *= -1;
+                }
+                
+                star.y += star.drift;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+                
+                ctx.fillStyle = `rgba(200, 200, 200, ${star.opacity * 0.6})`;
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+        }
+
+        function drawSatellites() {
+            satellites.forEach(sat => {
+                sat.angle += sat.speed;
+                
+                const posX = sat.x + Math.cos(sat.angle) * sat.radius;
+                const posY = sat.y + Math.sin(sat.angle) * sat.radius;
+                
+                sat.trail.push({ x: posX, y: posY });
+                if (sat.trail.length > 60) sat.trail.shift();
+                
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                sat.trail.forEach((point, i) => {
+                    const opacity = i / sat.trail.length;
+                    ctx.strokeStyle = `rgba(26, 26, 26, ${opacity * 0.4})`;
+                    if (i === 0) ctx.moveTo(point.x, point.y);
+                    else ctx.lineTo(point.x, point.y);
+                });
+                ctx.stroke();
+                
+                if (sat.type === 'satellite') {
+                    ctx.fillStyle = '#cccccc';
+                    ctx.fillRect(posX - 3, posY - 3, 6, 6);
+                    ctx.fillRect(posX - 6, posY - 1, 2, 2);
+                    ctx.fillRect(posX + 4, posY - 1, 2, 2);
+                    
+                    if (Math.floor(Date.now() / 600) % 2 === 0) {
+                        ctx.fillStyle = '#ff3333';
+                        ctx.fillRect(posX - 1, posY - 1, 2, 2);
+                    }
+                } else if (sat.type === 'payload') {
+                    ctx.fillStyle = '#999999';
+                    ctx.fillRect(posX - 4, posY - 4, 8, 8);
+                    ctx.fillStyle = '#cccccc';
+                    ctx.fillRect(posX - 2, posY - 2, 4, 4);
+                } else if (sat.type === 'debris') {
+                    ctx.fillStyle = '#666666';
+                    ctx.fillRect(posX - 2, posY - 2, 4, 4);
+                    ctx.fillRect(posX + 2, posY, 2, 2);
+                }
+            });
+        }
+
+        function drawDebris() {
+            debris.forEach(d => {
+                d.x += d.vx;
+                d.y += d.vy;
+                d.rotation += d.rotationSpeed;
+                
+                if (d.x < 0) d.x = canvas.width;
+                if (d.x > canvas.width) d.x = 0;
+                if (d.y < 0) d.y = canvas.height;
+                if (d.y > canvas.height) d.y = 0;
+                
+                ctx.save();
+                ctx.translate(d.x, d.y);
+                ctx.rotate(d.rotation);
+                ctx.fillStyle = '#333333';
+                ctx.fillRect(-d.size/2, -d.size/2, d.size, d.size);
+                ctx.restore();
+            });
+        }
+
+        function createPulse() {
+            if (satellites.length >= 2 && Math.random() < 0.015) {
+                const from = satellites[Math.floor(Math.random() * satellites.length)];
+                const to = satellites[Math.floor(Math.random() * satellites.length)];
+                if (from !== to) {
+                    const fromX = from.x + Math.cos(from.angle) * from.radius;
+                    const fromY = from.y + Math.sin(from.angle) * from.radius;
+                    const toX = to.x + Math.cos(to.angle) * to.radius;
+                    const toY = to.y + Math.sin(to.angle) * to.radius;
+                    
+                    pulses.push({ x1: fromX, y1: fromY, x2: toX, y2: toY, progress: 0 });
+                }
+            }
+        }
+
+        function drawPulses() {
+            for (let i = pulses.length - 1; i >= 0; i--) {
+                const pulse = pulses[i];
+                pulse.progress += 0.015;
+                
+                const x = pulse.x1 + (pulse.x2 - pulse.x1) * pulse.progress;
+                const y = pulse.y1 + (pulse.y2 - pulse.y1) * pulse.progress;
+                
+                if (pulse.progress >= 1) {
+                    pulses.splice(i, 1);
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(pulse.x1, pulse.y1);
+                    ctx.lineTo(x, y);
+                    ctx.strokeStyle = `rgba(255, 51, 51, ${1 - pulse.progress})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = '#ff3333';
+                    ctx.fillRect(x - 2, y - 2, 4, 4);
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawOrbitalPaths();
+            drawStars();
+            drawDebris();
+            drawSatellites();
+            createPulse();
+            drawPulses();
+            
+            createScanLine();
+            for (let i = scanLines.length - 1; i >= 0; i--) {
+                const line = scanLines[i];
+                line.y += line.speed;
+                if (line.y > canvas.height) {
+                    scanLines.splice(i, 1);
+                } else {
+                    ctx.fillStyle = `rgba(255, 51, 51, ${line.opacity})`;
+                    ctx.fillRect(0, line.y, canvas.width, 1);
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
